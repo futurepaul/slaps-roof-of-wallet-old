@@ -1,0 +1,14 @@
+[package]
+name = "slaps-roof-of-wallet"
+version = "0.1.0"
+authors = ["Paul Miller <paul@pauljmiller.com>"]
+edition = "2018"
+
+[dependencies]
+grpc = "0.6.1"
+lnd-rust = "0.4"
+druid = { git="https://github.com/xi-editor/druid/"}
+druid-shell = { git="https://github.com/xi-editor/druid/" }
+qrcodegen = "1.4.0"
+piet = "0.0.2"
+kurbo = "0.2.1"
