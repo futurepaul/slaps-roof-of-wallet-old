@@ -13,6 +13,11 @@ fn pad(widget: Id, state: &mut UiState) -> Id {
 pub mod lnd;
 pub mod wallet_widgets;
 
+enum AppStatus {
+    Bad(String),
+    Good
+}
+
 fn main() {
     druid_shell::init();
 
@@ -20,26 +25,28 @@ fn main() {
     let mut builder = WindowBuilder::new();
     let mut state = UiState::new();
 
-    let creds = lnd::Credentials::read_from_env();
-    let client = lnd::new_client(creds);
+    let mut app_status = AppStatus::Good;
+
+    let creds = lnd::Credentials::read_from_env().expect("creds problem");
+    let client = lnd::new_client(creds).expect("client problem");
 
     //ugh this is wrong to do this twice
-    let creds = lnd::Credentials::read_from_env();
+    let creds = lnd::Credentials::read_from_env().expect("creds2 problem");
 
-    let wallet_info = lnd::get_info(&creds, &client);
+    let wallet_info = lnd::get_info(&creds, &client).expect("wallet info problem");
     dbg!(&wallet_info);
     let title = pad(Label::new(wallet_info.alias).ui(&mut state), &mut state);
 
     let balance_msg = format!(
         "Balance (on chain): {} sats",
-        lnd::get_wallet_balance(&creds, &client)
+        lnd::get_wallet_balance(&creds, &client).expect("get wallet balance problem")
     );
     let balance_label = Label::new(balance_msg).ui(&mut state);
     let balance_padded = pad(balance_label, &mut state);
 
     let channel_msg = format!(
         "Balance (in channels): {} sats",
-        lnd::get_channel_balance(&creds, &client)
+        lnd::get_channel_balance(&creds, &client).expect("get channel balance problem")
     );
     let channel_label = Label::new(channel_msg).ui(&mut state);
     let channel_padded = pad(channel_label, &mut state);

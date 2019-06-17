@@ -1172,6 +1172,7 @@ version = "0.1.0"
 dependencies = [
  "druid 0.2.0 (git+https://github.com/xi-editor/druid/)",
  "druid-shell 0.2.0 (git+https://github.com/xi-editor/druid/)",
+ "failure 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "grpc 0.6.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "kurbo 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "lnd-rust 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
