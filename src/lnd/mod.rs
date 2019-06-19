@@ -157,6 +157,26 @@ pub fn get_info(creds: &Credentials, client: &LightningClient) -> Result<lnd_rus
     }
 }
 
+pub fn create_invoice(amount: u32, memo: String, creds: &Credentials, client: &LightningClient) -> Result<lnd_rust::rpc::AddInvoiceResponse> {
+    let mut invoice = rpc::Invoice::default();
+    invoice.memo = memo;
+    invoice.value = amount as i64;
+    invoice.expiry = 120; //(2 minutes);
+
+    if let Some(mac) = &creds.invoice_macaroon {
+        let resp = client.add_invoice(
+            RequestOptions {
+                metadata: mac.metadata(),
+            },
+            invoice,
+        );
+        return Ok(resp.wait().unwrap().1);
+    } else {
+        return Err(LndError::GrpcError("Add invoice failed".to_string()))
+    }
+
+}
+
 // //Here's where we construct our invoice, basing it off a default invoice (there are a ton more fields)
 // let mut invoice = rpc::Invoice::default();
 // invoice.memo = "Woah we're really doing this!".to_string();

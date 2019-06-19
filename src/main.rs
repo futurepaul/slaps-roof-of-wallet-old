@@ -51,10 +51,21 @@ fn main() {
     let channel_label = Label::new(channel_msg).ui(&mut state);
     let channel_padded = pad(channel_label, &mut state);
 
+    //Every time you run the wallet you create this invoice...
+    let invoice = lnd::create_invoice(142, "woah".to_string(), &creds, &client).expect("add invoice problem");
+    dbg!(&invoice.payment_request);
+    
+    //And render it to a barcode
     let qr = pad(
-        wallet_widgets::Qr::new(wallet_info.identity_pubkey.to_string()).ui(&mut state),
+        wallet_widgets::Qr::new(invoice.payment_request.to_string()).ui(&mut state),
         &mut state,
     );
+
+    //Alternatively you could render your wallet pubkey for topping up some funds
+    // let qr = pad(
+    //     wallet_widgets::Qr::new(wallet_info.identity_pubkey.to_string()).ui(&mut state),
+    //     &mut state,
+    // );
 
     let column = Column::new();
     let panel = column.ui(&[title, balance_padded, channel_padded, qr], &mut state);
